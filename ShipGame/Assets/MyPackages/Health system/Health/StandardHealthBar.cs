@@ -13,6 +13,7 @@ public class StandardHealthBar : HealthBar
     [SerializeField] bool _lazyHealthBar;
     [SerializeField] float _timeToMoveHealth;
     [SerializeField] int _lazyHPLostPerSecond;
+    [SerializeField] float _lengthPerHP;
     private float _lazyHP;
     private int _currentHP;
     private bool _initialized = false;
@@ -20,6 +21,10 @@ public class StandardHealthBar : HealthBar
     private void Awake()
     {
         Initialize();
+    }
+    public void AdjustForLength()
+    {
+        transform.localScale = new Vector3(_maxHP * _lengthPerHP, transform.lossyScale.y, transform.lossyScale.z);
     }
     public override void Initialize()
     {
@@ -85,6 +90,10 @@ public class StandardHealthBar : HealthBar
             if (GUILayout.Button("hp"))
             {
                 (target as StandardHealthBar).ReduceHP(10);
+            }
+            if (GUILayout.Button("Adjust width"))
+            {
+                (target as StandardHealthBar).AdjustForLength();
             }
         }
     }

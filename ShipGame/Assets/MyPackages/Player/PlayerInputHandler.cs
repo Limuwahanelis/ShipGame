@@ -3,15 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerInputHandler : MonoBehaviour
 {
     [SerializeField] bool _debug;
     [SerializeField] PlayerController _player;
+    [SerializeField] PlayerMovement2D _movement;
     [SerializeField] bool _useCommands;
     [SerializeField] PlayerInputStack _inputStack;
     [SerializeField] GameEventSO _pauseEvent;
     private Vector2 _direction;
+    private float _angleRoot;
+    private float _move;
+    private bool _canMove=true;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,15 +31,42 @@ public class PlayerInputHandler : MonoBehaviour
 
             if (!PauseSettings.IsGamePaused)
             {
-                _player.CurrentPlayerState.Move(_direction);
+                if (!_canMove) return;
+                if (_move != 0)
+                {
+                    if (_move > 0) _movement.IncreaseSpeed();
+                    else _movement.DecreaseSpeed();
+                }
 
             }
         }
+    }
+    private void FixedUpdate()
+    {
+        if (!PauseSettings.IsGamePaused)
+        {
+            if (!_canMove) return;
+            _player.CurrentPlayerState.Move(_direction);
+            if (_angleRoot != 0)
+            {
+                if (_angleRoot > 0) _movement.DecreaseAngle();
+                else _movement.IncreaseAngle();
+            }
+        }
+    }
+    public void ChangeCanMove()
+    {
+        _canMove = !_canMove;
     }
     private void OnMove(InputValue value)
     {
         _direction = value.Get<Vector2>();
         if (_debug) Logger.Log(_direction);
+    }
+    private void OnInteract(InputValue value)
+    {
+        if (!_canMove) return;
+        _player.Interact();
     }
     void OnJump(InputValue value)
     {
@@ -43,9 +75,21 @@ public class PlayerInputHandler : MonoBehaviour
         else _player.CurrentPlayerState.Jump();
 
     }
+    void OnHorizontal(InputValue value)
+    {
+
+        _angleRoot = value.Get<float>();
+        Logger.Log(_angleRoot);
+    }
     void OnVertical(InputValue value)
     {
-        _direction = value.Get<Vector2>();
+        _move = value.Get<float>();
+
+    }
+    void OnSetAmount(InputValue value)
+    {
+        if (value.Get<float>() > 0) _player.IncreasePillagingCrew();
+        else _player.DecreasePillagingCrew();
     }
     private void OnPause()
     {

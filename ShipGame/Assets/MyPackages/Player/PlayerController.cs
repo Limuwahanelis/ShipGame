@@ -12,8 +12,9 @@ public class PlayerController : MonoBehaviour
     public GameObject MainBody => _mainBody;
     [Header("Player")]
     [SerializeField] GameObject _mainBody;
+    [SerializeField] PlayerInteractions _interactions;
     [SerializeField] AnimationManager _playerAnimationManager;
-    [SerializeField] PlayerMovement _playerMovement;
+    [SerializeField] PlayerMovement2D _playerMovement;
     [SerializeField] AudioEventPlayer _playerAudioEventPlayer;
     //[SerializeField] PlayerChecks _playerChecks;
     //[SerializeField] PlayerCombat _playerCombat;
@@ -84,6 +85,21 @@ public class PlayerController : MonoBehaviour
     {
         _currentPlayerState.Push();
     }
+
+    public void IncreasePillagingCrew()
+    {
+        _interactions.IncreaseAmount();
+    }
+    public void DecreasePillagingCrew()
+    {
+        _interactions.DecreaseAmount();
+    }
+    public void Interact()
+    {
+        _interactions.Interact();
+        _playerMovement.Stop();
+    }
+
     public Coroutine WaitAndExecuteFunction(float timeToWait, Action function)
     {
         return StartCoroutine(HelperClass.DelayedFunction(timeToWait, function));

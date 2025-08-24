@@ -21,12 +21,12 @@ public class PlayerMoveTestState : PlayerState
     }
     public override void Move(Vector2 direction)
     {
-        if (direction == Vector2.zero)
-        {
-            _context.playerMovement.Stop();
-            return;
-        }
-        _context.playerMovement.Move(direction, GlobalEnums.MoveType.RUN,true);
+        //if (direction == Vector2.zero)
+        //{
+        //    _context.playerMovement.Stop();
+        //    return;
+        //}
+        //_context.playerMovement.Move();
     }
     public override void InterruptState()
     {

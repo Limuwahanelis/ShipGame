@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerMovement2D : MonoBehaviour
@@ -11,17 +13,31 @@ public class PlayerMovement2D : MonoBehaviour
     [SerializeField] Rigidbody2D _rb;
     [SerializeField] Transform _mainBody;
     [SerializeField] PlayerController _player;
-    [SerializeField] float _normalGravityForce;
+    [SerializeField] PlayerRaycasts _raycasts;
     [SerializeField] float _speed;
     [Header("Jump")]
     [SerializeField] Ringhandle _jumpHandle;
     [SerializeField] SlopeDetection _slopeDetection;
     [SerializeField] float _jumpStrength;
 
+    [Header("Speeds")]
+    [SerializeField] float _acceleration;
+    [SerializeField] float _maxSpeed;
+    [SerializeField] float _minSpeed;
+    [SerializeField] float _walkSpeed = 2f;
+    [SerializeField] float _runSpeed = 5f;
+    [SerializeField] float _sprintSpeed = 10f;
+    [SerializeField, Header("Rotations")] float _angularRotationSpeed;
+    
     private int _flipSide = 1;
     private GlobalEnums.HorizontalDirections _newPlayerDirection;
     private GlobalEnums.HorizontalDirections _oldPlayerDirection;
     private float _previousDirection;
+
+    private bool _canMove = true;
+    private float _moveSpeed;
+    private float _targetRotAngle;
+    private Vector2 _dirVector=Vector2.up;
     public void MoveInAir(Vector2 direction,bool canRotate)
     {
         if (direction.x != 0)
@@ -72,5 +88,41 @@ public class PlayerMovement2D : MonoBehaviour
 
         }
 
+    }
+    public void Stop()
+    {
+        _moveSpeed = 0;
+    }
+    private void FixedUpdate()
+    {
+        if (_raycasts.isHittingWall) return;
+        _rb.MovePosition(_rb.transform.position + _rb.transform.up * _moveSpeed * Time.deltaTime);
+    }
+    public void IncreaseSpeed()
+    {
+        _moveSpeed += Time.deltaTime * _acceleration;
+        if (_moveSpeed > _maxSpeed) _moveSpeed = _maxSpeed;
+    }
+    public void DecreaseSpeed()
+    {
+
+        _moveSpeed -= Time.deltaTime * _acceleration;
+        if (_moveSpeed < _minSpeed) _moveSpeed = _minSpeed;
+    }
+    public void IncreaseAngle()
+    {
+        _targetRotAngle += _angularRotationSpeed * Time.deltaTime;
+        if (_targetRotAngle >= 360) _targetRotAngle = 0;
+        _rb.SetRotation(_targetRotAngle);
+    }
+    public void DecreaseAngle()
+    {
+        _targetRotAngle -= _angularRotationSpeed * Time.deltaTime; ;
+        if (_targetRotAngle <= -360) _targetRotAngle = 0;
+        _rb.SetRotation(_targetRotAngle);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(_rb.transform.position, _rb.transform.position + (Vector3)_dirVector * 2f);
     }
 }

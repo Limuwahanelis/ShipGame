@@ -11,7 +11,7 @@ public class PlayerContext
     public Func<Action, Coroutine> WaitFrameAndPerformFunction;
     public MonoBehaviour coroutineHolder;
     public AnimationManager animationManager;
-    public PlayerMovement playerMovement;
+    public PlayerMovement2D playerMovement;
     public AudioEventPlayer audioEventPlayer;
     //public PlayerChecks checks;
     //public PlayerCombat combat;

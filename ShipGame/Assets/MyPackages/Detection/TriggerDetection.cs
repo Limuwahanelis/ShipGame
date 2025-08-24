@@ -1,36 +1,46 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TriggerDetection : MonoBehaviour
 {
+    public UnityEvent OnColliderDetected;
+    public UnityEvent<Collider2D> OnColliderDetectedCol;
+    public UnityEvent OnColliderLeft;
+    public UnityEvent<Collider2D> OnColliderLeftCol;
+    [SerializeField] Collider2D _colliderToDetect;
+    [SerializeField] bool _checkForSpecificCollider;
+    [SerializeField] bool _disableDetectedGameObjectOnDetection;
+
     List<ITriggerDetectable> _detectables= new List<ITriggerDetectable>();
     private Rigidbody _rb;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
-    }
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    Logger.Log(other.gameObject.name);
-    //}
-    private void OnTriggerEnter(Collider other)
-    {
-        Logger.Log("enter "+other.gameObject.name);
-        _rb = other.attachedRigidbody;
-        if (_rb != null)
+        if (_checkForSpecificCollider)
         {
-
+            if (other == _colliderToDetect)
+            {
+                if (_disableDetectedGameObjectOnDetection) other.gameObject.SetActive(false);
+                OnColliderDetected?.Invoke();
+                OnColliderDetectedCol?.Invoke(other);
+            }
         }
+        OnColliderDetected?.Invoke();
+        OnColliderDetectedCol?.Invoke(other);
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        Logger.Log("left " + other.gameObject.name);
+        if (_checkForSpecificCollider)
+        {
+            if (other == _colliderToDetect)
+            {
+                if (_disableDetectedGameObjectOnDetection) other.gameObject.SetActive(false);
+                OnColliderLeft?.Invoke();
+                OnColliderLeftCol?.Invoke(other);
+            }
+        }
+        OnColliderLeft?.Invoke();
+        OnColliderLeftCol?.Invoke(other);
     }
 }
