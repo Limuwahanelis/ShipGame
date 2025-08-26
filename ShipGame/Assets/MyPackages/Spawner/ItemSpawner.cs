@@ -9,9 +9,9 @@ using UnityEngine.Search;
 public class  ItemSpawner: MonoBehaviour
 {
     public List<SpawnableItem> Spawneditems => _spawnedItems;
-    [SerializeField,SearchContext("t:SpawnableItem")] GameObject _itemPrefab;
+    [SerializeField,SearchContext("t:SpawnableItem")] SpawnableItem _itemPrefab;
     private ObjectPool<SpawnableItem> _pool;
-    private List<SpawnableItem> _spawnedItems;
+    private List<SpawnableItem> _spawnedItems = new List<SpawnableItem>();
     // Start is called before the first frame update
     void Awake()
     {
@@ -32,11 +32,11 @@ public class  ItemSpawner: MonoBehaviour
     }
     void OnTakeItemFromPool(SpawnableItem item)
     {
-
+        item.gameObject.SetActive(true);
     }
     void OnReturnItemToPool(SpawnableItem item)
     {
-
+        item.gameObject.SetActive(false);
     }
 }
 
