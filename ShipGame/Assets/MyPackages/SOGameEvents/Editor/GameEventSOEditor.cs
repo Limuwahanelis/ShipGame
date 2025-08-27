@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(GameEventSO))]
+[CustomEditor(typeof(GameEventSO),true)]
 public class GameEventSOEditor: Editor
 {
     private void OnEnable()

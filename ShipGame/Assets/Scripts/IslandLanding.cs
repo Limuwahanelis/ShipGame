@@ -1,3 +1,4 @@
+using MyBox;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,12 +8,13 @@ using UnityEngine;
 public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
 {
     public Action<int> OnPillaged;
-    [SerializeField] ItemSpawner _crewSpawner;
+    [SerializeField] bool _debug;
+    [SerializeField, ConditionalField("_debug")] ItemSpawner _crewSpawner;
+    [SerializeField,ConditionalField("_debug")] PlayerShip _ship;
     [SerializeField] int _minCrew;
     [SerializeField] float _unloadSpeed;
     [SerializeField] int _maxLoot;
-    [SerializeField] PlayerShip _ship;
-    [SerializeField] GameEventSO _unloadCrewEvent;
+    [SerializeField] GameEventVoidSO _unloadCrewEvent;
     [SerializeField] IslandDescription _description;
     [SerializeField] List<Transform> _pillagePoints= new List<Transform>();
     [SerializeField] Transform _crewSpawnPoint;
@@ -51,6 +53,7 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
                 {
                     pillagedAmount += _currentLoot;
                     _currentLoot = 0;
+                  
                 }
                 _description.UpdateLoot(_currentLoot);
                 _pillagedLoot += pillagedAmount;
@@ -116,6 +119,7 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
             }
             _crewMembers.Clear();
             _returnedCrewNum = 0;
+            OnPillaged?.Invoke(_pillagedLoot);
             Logger.Log("Crew returned");
         }
     }

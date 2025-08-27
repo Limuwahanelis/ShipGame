@@ -18,6 +18,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] ItemSpawner _crewSpawner;
     [SerializeField] PlayerShip _ship;
     [SerializeField] float _pillagedGoldToNotority = 100;
+    [SerializeField] GameEventIntSO _onNotorityLevelChanged;
+    [SerializeField] GameEventIntSO _onNotorityPointsChanged;
     private int _notorityPoints;
     private void Awake()
     {
@@ -31,11 +33,15 @@ public class LevelManager : MonoBehaviour
     {
         _notorityPoints += amount;
         _notorityPoints = math.clamp(_notorityPoints, 0, 200);
+        _onNotorityPointsChanged?.Raise(_notorityPoints);
+        _onNotorityLevelChanged?.Raise(NotorityLevel);
     }
 
     public void GoldPillaged(int amount)
     {
         _notorityPoints += (int)(amount / _pillagedGoldToNotority);
+        _onNotorityPointsChanged?.Raise(_notorityPoints);
+        _onNotorityLevelChanged?.Raise(NotorityLevel);
     }
     private void OnDestroy()
     {

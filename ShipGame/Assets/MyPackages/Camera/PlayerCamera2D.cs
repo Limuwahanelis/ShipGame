@@ -1,3 +1,4 @@
+using MyBox;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,11 @@ public class PlayerCamera2D : MonoBehaviour
     [SerializeField] Vector3 offset;
 
 
-    [SerializeField] bool CheckForBorders = true;
-    [SerializeField] Transform leftScreenBorder;
-    [SerializeField] Transform rightScreenBorder;
-    [SerializeField] Transform upperScreenBorder;
-    [SerializeField] Transform lowerScreenBorder;
+    [SerializeField] bool _checkForBorders = true;
+    [SerializeField, ConditionalField("_checkForBorders")] Transform leftScreenBorder;
+    [SerializeField, ConditionalField("_checkForBorders")] Transform rightScreenBorder;
+    [SerializeField, ConditionalField("_checkForBorders")] Transform upperScreenBorder;
+    [SerializeField, ConditionalField("_checkForBorders")] Transform lowerScreenBorder;
 
     [SerializeField] float smoothTime = 0.3f;
 
@@ -42,7 +43,7 @@ public class PlayerCamera2D : MonoBehaviour
     private void FixedUpdate()
     {
         if (_transformToFollow == null) return;
-        if (CheckForBorders)
+        if (_checkForBorders)
         {
             _targetPos = _positionToFollow;
             if (_followOnXAxis)
@@ -68,7 +69,7 @@ public class PlayerCamera2D : MonoBehaviour
     public void SetPositionToFollowRaw(Vector3 pos)
     {
         _positionToFollow = pos;
-        if (CheckForBorders)
+        if (_checkForBorders)
         {
             if (_positionToFollow.x - _horizontalMax < leftScreenBorder.position.x)
             {
@@ -98,7 +99,7 @@ public class PlayerCamera2D : MonoBehaviour
     public void SetPositionToFollow(Vector3 pos)
     {
         _positionToFollow = pos;
-        if (CheckForBorders)
+        if (_checkForBorders)
         {
             if (_positionToFollow.x - _horizontalMax < leftScreenBorder.position.x)
             {

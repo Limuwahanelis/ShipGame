@@ -16,7 +16,7 @@ public class PlayerCamera : MonoBehaviour
 
     [Header("Borders")]
     [SerializeField] bool _checkForBorders = true;
-    [SerializeField,ConditionalField("_checkForBorders")] Transform leftScreenBorder;
+    [SerializeField, ConditionalField("_checkForBorders")] Transform leftScreenBorder;
     [SerializeField, ConditionalField("_checkForBorders")] Transform rightScreenBorder;
     [SerializeField, ConditionalField("_checkForBorders")] Transform upperScreenBorder;
     [SerializeField, ConditionalField("_checkForBorders")] Transform lowerScreenBorder;

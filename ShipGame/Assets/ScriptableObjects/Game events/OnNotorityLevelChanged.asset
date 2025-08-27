@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c993d3c035176d408d8509bd39d796c, type: 3}
-  m_Name: OnPillageOrEndPillage
+  m_Script: {fileID: 11500000, guid: fda18e497420ebe40a3cffd9a85d5de0, type: 3}
+  m_Name: OnNotorityLevelChanged
   m_EditorClassIdentifier: 
+  _debugValue: 2

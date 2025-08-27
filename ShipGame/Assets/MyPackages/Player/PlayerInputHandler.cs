@@ -12,7 +12,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] PlayerMovement2D _movement;
     [SerializeField] bool _useCommands;
     [SerializeField] PlayerInputStack _inputStack;
-    [SerializeField] GameEventSO _pauseEvent;
+    [SerializeField] GameEventVoidSO _pauseEvent;
+    [SerializeField] GunsComponent _playerGuns;
     private Vector2 _direction;
     private float _angleRoot;
     private float _move;
@@ -53,6 +54,11 @@ public class PlayerInputHandler : MonoBehaviour
                 else _movement.IncreaseAngle();
             }
         }
+    }
+    void OnMousePos(InputValue value)
+    {
+        HelperClass.SetMousePos(value.Get<Vector2>());
+        _playerGuns.LookAtMouse();
     }
     public void ChangeCanMove()
     {
