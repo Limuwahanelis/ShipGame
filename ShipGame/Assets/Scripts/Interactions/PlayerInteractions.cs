@@ -8,7 +8,7 @@ public class PlayerInteractions : MonoBehaviour
     public void SetIslandLanding(IslandLanding landing)
     {
         _interactable = landing;
-        _amountSettable = landing;
+        //_amountSettable = landing;
     }
 
     public void Interact()

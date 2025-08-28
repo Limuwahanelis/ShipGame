@@ -7,4 +7,6 @@ public class EnemyShipContext : EnemyContext
     public Transform enemyTran;
     public EnemyStats stats;
     public Vector2 circlingMiddlePoint;
+    public GunsComponent guns;
+    public float gunsTimer;
 }

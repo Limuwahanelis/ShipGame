@@ -17,7 +17,18 @@ public class EnemyShipStateCircling : EnemyState
 
     public override void Update()
     {
-        
+        _context.gunsTimer += Time.deltaTime;
+        _context.gunsTimer = Math.Clamp(_context.gunsTimer, 0, 60f);
+        if (_context.gunsTimer >= _context.stats.FireCooldown)
+        {
+            if (Vector2.Distance(_context.playerTran.position, _context.enemyPos) <= _context.stats.CannonsRange)
+            {
+                _context.guns.LookAt(_context.playerTran.position);
+                _context.gunsTimer = 0;
+                _context.guns.FireGuns();
+            }
+        }
+
         if (Vector2.Distance(_context.circlingMiddlePoint, _context.playerTran.position) > _context.stats.StartCirclingDistance)
         {
             ChangeState(EnemyShipStateChase.StateType);

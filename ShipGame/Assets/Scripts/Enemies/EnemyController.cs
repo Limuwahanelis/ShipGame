@@ -15,15 +15,19 @@ public abstract class EnemyController : MonoBehaviour
     [SerializeField] protected Rigidbody2D _playerRB;
     [SerializeField] protected GameObject _mainBody;
     [SerializeField] protected StandardHealthBar _healthBar;
+    [SerializeField] protected GunsComponent _guns;
     protected Dictionary<Type, EnemyState> _enemyStates = new Dictionary<Type, EnemyState>();
     protected EnemyState _currentEnemyState;
     public virtual void Awake()
     {
-        _healthBar.SetMaxHealth(_stats.MaxHP);
-        _healthBar.AdjustForLength();
+
         if (_playerTransform == null) _playerTransform = FindFirstObjectByType<PlayerController>().MainBody.transform;
     }
-
+    private void Start()
+    {
+        _healthBar.SetMaxHealth(_stats.MaxHP);
+        _healthBar.AdjustForLength();
+    }
     public EnemyState GetState(Type state)
     {
         return _enemyStates[state];

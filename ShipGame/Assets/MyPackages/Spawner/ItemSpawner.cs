@@ -36,6 +36,7 @@ public class  ItemSpawner: MonoBehaviour
     }
     void OnReturnItemToPool(SpawnableItem item)
     {
+        item.OnReturnToPool();
         item.gameObject.SetActive(false);
     }
 }

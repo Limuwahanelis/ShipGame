@@ -13,6 +13,7 @@ public class HealthSystem : MonoBehaviour,IDamagable
     public int CurrentHP => _currentHP;
     public int MaxHP => _maxHP;
 
+    [SerializeField] protected bool _debug;
     [SerializeField] protected Collider2D[] _colliders;
     [SerializeField] protected bool _isInvincible;
     [SerializeField] protected HealthBar _hpBar;
@@ -39,10 +40,11 @@ public class HealthSystem : MonoBehaviour,IDamagable
     {
         if (_isInvincibleToDamage) return;
         if (!IsAlive) return;
+        if (_debug) Logger.Log(info.dmg);
         _currentHP -= info.dmg;
         if (_hpBar != null) _hpBar.SetHealth(_currentHP);
         OnHitEvent?.Invoke(info);
-        StartCoroutine(DamageInvincibilityCor());
+        if(_invincibilityAfterHitDuration>0) StartCoroutine(DamageInvincibilityCor());
         if (_currentHP <= 0) Kill();
     }
     /// <summary>

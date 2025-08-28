@@ -3,19 +3,31 @@ using UnityEngine;
 
 public class GunsComponent : MonoBehaviour
 {
-    [SerializeField] List<ShipGun> _gunLines = new List<ShipGun>();
+    [SerializeField] List<ShipGun> _guns = new List<ShipGun>();
     [SerializeField] ItemSpawner _cannonBallSpawner;
+    public void SetUp(float gunsRange,float cannobBallSpeed,int damage)
+    {
+        foreach (ShipGun gun in _guns)
+        {
+            gun.SetUp(_cannonBallSpawner, gunsRange, cannobBallSpeed, damage);
+        }
+    }
     public void FireGuns()
     {
+        foreach (ShipGun gun in _guns)
+        {
+            gun.Fire();
+        }
 
     }
-
+    public void LookAt(Vector3 pos)
+    {
+        transform.up = (pos - transform.position).normalized;
+    }
     public void LookAtMouse()
     {
         Vector3 tmp = transform.position;
         tmp.z = -1;
         transform.up = Camera.main.ScreenToWorldPoint(HelperClass.MousePos)- tmp;
-        Logger.Log($"{Camera.main.ScreenToWorldPoint(HelperClass.MousePos)} a {transform.position}");
-        Logger.Log(transform.up);
     }
 }

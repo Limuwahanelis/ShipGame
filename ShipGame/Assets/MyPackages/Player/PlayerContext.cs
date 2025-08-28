@@ -13,6 +13,7 @@ public class PlayerContext
     public AnimationManager animationManager;
     public PlayerMovement2D playerMovement;
     public AudioEventPlayer audioEventPlayer;
+    public PlayerShip playerShip;
     //public PlayerChecks checks;
     //public PlayerCombat combat;
     //public PlayerCollisions collisions;

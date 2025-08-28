@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AnimationManager _playerAnimationManager;
     [SerializeField] PlayerMovement2D _playerMovement;
     [SerializeField] AudioEventPlayer _playerAudioEventPlayer;
+    [SerializeField] PlayerShip _ship;
     //[SerializeField] PlayerChecks _playerChecks;
     //[SerializeField] PlayerCombat _playerCombat;
     //[SerializeField] PlayerCollisions _playerCollisions;
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
             WaitAndPerformFunction = WaitAndExecuteFunction,
             WaitFrameAndPerformFunction = WaitFrameAndExecuteFunction,
             audioEventPlayer = _playerAudioEventPlayer,
+            playerShip = _ship,
             coroutineHolder = this,
             //checks = _playerChecks,
             //combat = _playerCombat,
@@ -88,11 +90,11 @@ public class PlayerController : MonoBehaviour
 
     public void IncreasePillagingCrew()
     {
-        _interactions.IncreaseAmount();
+        _ship.IncreaseCrewToPillage();
     }
     public void DecreasePillagingCrew()
     {
-        _interactions.DecreaseAmount();
+        _ship.DecreaserewToPillage();
     }
     public void Interact()
     {

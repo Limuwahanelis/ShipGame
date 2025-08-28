@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
+public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
 {
     public Action<int> OnPillaged;
     [SerializeField] bool _debug;
@@ -18,6 +18,7 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
     [SerializeField] IslandDescription _description;
     [SerializeField] List<Transform> _pillagePoints= new List<Transform>();
     [SerializeField] Transform _crewSpawnPoint;
+    
     private float _time = 0;
     private int _crewToPlunder;
     private int _returnedCrewNum = 0;
@@ -30,8 +31,9 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
     {
         _currentLoot = _maxLoot;
         if (_ship == null) _ship = FindFirstObjectByType<PlayerShip>();
+        _ship.OnCrewToPillagedChanged += UpdateCrewToPillageAmount;
         _crewToPlunder = _minCrew;
-        _description.SetUp(_maxLoot, _minCrew, _minCrew);
+        _description.SetUp(_maxLoot, 0, _minCrew);
     }
     public void SetUp(PlayerShip ship,ItemSpawner crewSpawner)
     {
@@ -72,19 +74,24 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
         PlayerInteractions playerInteractions = col.attachedRigidbody.GetComponent<PlayerInteractions>();
         playerInteractions.SetIslandLanding(null);
     }
-    public void IncreaseAmount()
+    public void UpdateCrewToPillageAmount(int value)
     {
-        _crewToPlunder++;
-        _crewToPlunder = math.clamp(_crewToPlunder, 0, _ship.CurrentCrew - 1);
+        _crewToPlunder = value;
         _description.Refresh(_minCrew, _crewToPlunder);
     }
+    //public void IncreaseAmount()
+    //{
+    //    _crewToPlunder++;
+    //    _crewToPlunder = math.clamp(_crewToPlunder, 0, _ship.CurrentCrew - 1);
+    //    _description.Refresh(_minCrew, _crewToPlunder);
+    //}
 
-    public void DecreaseAmount()
-    {
-        _crewToPlunder--;
-        if (_crewToPlunder <= 0) _crewToPlunder = 0;
-        _description.Refresh(_minCrew, _crewToPlunder);
-    }
+    //public void DecreaseAmount()
+    //{
+    //    _crewToPlunder--;
+    //    if (_crewToPlunder <= 0) _crewToPlunder = 0;
+    //    _description.Refresh(_minCrew, _crewToPlunder);
+    //}
     public void Interact()
     {
         if (_isBeingPillaged)
@@ -100,6 +107,7 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
         }
         else
         {
+            if (_crewToPlunder < _minCrew) return;
             _isBeingPillaged = true;
             _unloadCrewEvent?.Raise();
             StartCoroutine(UnloadCor());
@@ -152,5 +160,8 @@ public class IslandLanding : MonoBehaviour,IAmountSettable,IInteractable
         _ship = FindFirstObjectByType<PlayerShip>();
     }
 
-
+    private void OnDestroy()
+    {
+        _ship.OnCrewToPillagedChanged -= UpdateCrewToPillageAmount;
+    }
 }
