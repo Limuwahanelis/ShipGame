@@ -58,7 +58,7 @@ public class PlayerInputHandler : MonoBehaviour
     void OnMousePos(InputValue value)
     {
         HelperClass.SetMousePos(value.Get<Vector2>());
-        _playerGuns.LookAtMouse();
+        //_playerGuns.LookAtMouse();
     }
     public void ChangeCanMove()
     {

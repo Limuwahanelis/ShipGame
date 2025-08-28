@@ -26,8 +26,11 @@ public class TriggerDetection : MonoBehaviour
                 OnColliderDetectedCol?.Invoke(other);
             }
         }
-        OnColliderDetected?.Invoke();
-        OnColliderDetectedCol?.Invoke(other);
+        else
+        {
+            OnColliderDetected?.Invoke();
+            OnColliderDetectedCol?.Invoke(other);
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -40,7 +43,10 @@ public class TriggerDetection : MonoBehaviour
                 OnColliderLeftCol?.Invoke(other);
             }
         }
-        OnColliderLeft?.Invoke();
-        OnColliderLeftCol?.Invoke(other);
+        else
+        {
+            OnColliderLeft?.Invoke();
+            OnColliderLeftCol?.Invoke(other);
+        }
     }
 }

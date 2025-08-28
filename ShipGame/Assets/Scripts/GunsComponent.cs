@@ -24,10 +24,4 @@ public class GunsComponent : MonoBehaviour
     {
         transform.up = (pos - transform.position).normalized;
     }
-    public void LookAtMouse()
-    {
-        Vector3 tmp = transform.position;
-        tmp.z = -1;
-        transform.up = Camera.main.ScreenToWorldPoint(HelperClass.MousePos)- tmp;
-    }
 }
