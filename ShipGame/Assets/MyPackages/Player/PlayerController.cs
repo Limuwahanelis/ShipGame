@@ -33,7 +33,8 @@ public class PlayerController : MonoBehaviour
     }
     protected void Initalize()
     {
-       
+        _playerHealthSystem.OnDeath += OOnDeath;
+
         List<Type> states = AppDomain.CurrentDomain.GetAssemblies().SelectMany(domainAssembly => domainAssembly.GetTypes())
             .Where(type => typeof(PlayerState).IsAssignableFrom(type) && !type.IsAbstract).ToArray().ToList();
 
@@ -63,6 +64,10 @@ public class PlayerController : MonoBehaviour
          newState.SetUpState(_context);
          _currentPlayerState = newState;
         Logger.Log(newState.GetType());
+    }
+    private void OOnDeath(IDamagable damagable)
+    {
+
     }
     public PlayerState GetState(Type state)
     {
@@ -113,6 +118,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-
+        _playerHealthSystem.OnDeath -= OOnDeath;
     }
 }

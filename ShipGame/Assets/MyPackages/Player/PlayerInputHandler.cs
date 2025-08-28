@@ -85,7 +85,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
 
         _angleRoot = value.Get<float>();
-        Logger.Log(_angleRoot);
     }
     void OnVertical(InputValue value)
     {

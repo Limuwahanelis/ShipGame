@@ -13,7 +13,7 @@ public class PlayerMovement2D : MonoBehaviour
     [SerializeField] Rigidbody2D _rb;
     [SerializeField] Transform _mainBody;
     [SerializeField] PlayerController _player;
-    [SerializeField] PlayerRaycasts _raycasts;
+    [SerializeField] ShipRaycasts _raycasts;
     [SerializeField] float _speed;
     [Header("Jump")]
     [SerializeField] Ringhandle _jumpHandle;

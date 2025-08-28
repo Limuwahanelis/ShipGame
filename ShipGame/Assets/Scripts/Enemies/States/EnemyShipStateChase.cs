@@ -7,6 +7,7 @@ public class EnemyShipStateChase : EnemyState
 {
     public static Type StateType { get => typeof(EnemyShipStateChase); }
     private EnemyShipContext _context;
+    
     public EnemyShipStateChase(GetState function) : base(function)
     {
     }
@@ -31,7 +32,9 @@ public class EnemyShipStateChase : EnemyState
         }
         else
         {
-            _context.enemyTran.up = (_context.playerTran.position - _context.enemyTran.position).normalized;
+            //_context.enemyTran.up = (_context.playeryPos - (Vector2)_context.enemyTran.position).normalized;
+             _context.enemyTran.up = (_context.agent.steeringTarget - _context.enemyTran.position).normalized;
+            _context.agent.SetDestination(_context.playerTran.position);
             _context.enemyTran.position += _context.enemyTran.up * _context.stats.Speed * Time.deltaTime;
         }
     }
@@ -40,6 +43,10 @@ public class EnemyShipStateChase : EnemyState
     {
         base.SetUpState(context);
         _context = (EnemyShipContext)context;
+        //_context.agent.SetDestination(_context.playerTran.position);
+        _context.agent.isStopped = true;
+        _context.agent.enabled = true;
+        _context.agent.updateRotation = true;
     }
 
     public override void InterruptState()

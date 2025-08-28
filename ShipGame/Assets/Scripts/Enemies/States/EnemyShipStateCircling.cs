@@ -11,6 +11,7 @@ public class EnemyShipStateCircling : EnemyState
     private Vector2 _targetPos;
     private float _angle;
     private float _angularSpeed;
+
     public EnemyShipStateCircling(GetState function) : base(function)
     {
     }
@@ -36,23 +37,29 @@ public class EnemyShipStateCircling : EnemyState
         else
         {
 
-            if (Vector2.Distance(_context.enemyPos, _targetPos) > 0.02f)
-            {
-                _context.enemyPos = Vector2.MoveTowards(_context.enemyPos, _targetPos, _context.stats.Speed * Time.deltaTime);
-                _context.enemyTran.up = _targetPos- _context.enemyPos;
-                return;
-            }
-            else
-            {
-                
+            //if (Vector2.Distance(_context.enemyPos, _targetPos) > 0.02f)
+            //{
+            //    _context.enemyPos = Vector2.MoveTowards(_context.enemyPos, _targetPos, _context.stats.Speed * Time.deltaTime);
+            //    _context.enemyTran.up = _targetPos - _context.enemyPos;
+            //    return;
+            //}
+            //else
+            //{
+                if (_context.shipRaycasts.isHittingWall)
+                {
+                    ChangeState(EnemyShipStateBackToCircle.StateType);
+                    return;
+
+
+                }
+                //if(Physics2D.Raycast(_context.enemyPos,))
                 _angle += _angularSpeed * Time.deltaTime;
-                //Logger.Log(_angle * Mathf.Rad2Deg);
                 _targetPos = new Vector2(Mathf.Sin(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.x, Mathf.Cos(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.y);
                 _context.enemyPos = _targetPos;
                 _previousPos = _context.enemyPos;
                 _context.enemyTran.up = Vector2.Perpendicular(_context.circlingMiddlePoint - _context.enemyPos);
                 if (_angle >= 2 * Mathf.PI) _angle = 0;
-            }
+            //}
         }
     }
 
@@ -63,6 +70,9 @@ public class EnemyShipStateCircling : EnemyState
         _angle = MathF.Atan2(_context.enemyPos.y-_context.circlingMiddlePoint.y, -(_context.enemyPos.x - _context.circlingMiddlePoint.x))-MathF.PI/2;
         _angularSpeed = (_context.stats.Speed / _context.stats.StartCirclingDistance);
         _targetPos = new Vector2(Mathf.Sin(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.x, Mathf.Cos(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.y);
+        _context.agent.isStopped = true;
+        _context.agent.updateRotation = false;
+        _context.agent.enabled = false;
         _previousPos = _context.enemyPos;
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerRaycasts : MonoBehaviour
+public class ShipRaycasts : MonoBehaviour
 {
 
     public bool isHittingWall => _isHittingWall;
@@ -17,6 +17,6 @@ public class PlayerRaycasts : MonoBehaviour
     {
         if (_frontShipPos == null) return;
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(_frontShipPos.position, _frontShipPos.position+  transform.up * _frontShipRaycastlength);
+        Gizmos.DrawLine(_frontShipPos.position, _frontShipPos.position+ _frontShipPos.up * _frontShipRaycastlength);
     }
 }

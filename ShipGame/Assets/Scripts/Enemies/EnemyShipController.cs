@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyShipController : EnemyController
 {
-    
-   
+
+
+    [SerializeField] NavMeshAgent _agent;
+    [SerializeField] ShipRaycasts _raycast;
     protected EnemyShipContext _context;
 
     void Start()
@@ -16,6 +19,7 @@ public class EnemyShipController : EnemyController
         List<Type> states = AppDomain.CurrentDomain.GetAssemblies().SelectMany(domainAssembly => domainAssembly.GetTypes())
     .Where(type => typeof(EnemyState).IsAssignableFrom(type) && !type.IsAbstract).ToArray().ToList();
 
+        _agent.updateRotation = false;
         _guns.SetUp(_stats.CannonsRange,_stats.CannonBallSpeed,_stats.CannonsDamage);
         _context = new EnemyShipContext
         {
@@ -25,6 +29,8 @@ public class EnemyShipController : EnemyController
             playerTran = _playerTransform,
             stats = _stats,
             guns = _guns,
+            agent = _agent,
+            shipRaycasts = _raycast,
         };
         EnemyState.GetState getState = GetState;
         foreach (Type state in states)
