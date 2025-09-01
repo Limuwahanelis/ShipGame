@@ -12,6 +12,8 @@ public class EnemyShipStateBackToCircle : EnemyState
     private Vector2 _lastStraghtVector;
     private bool _isGoingBackToCircle = true;
     private bool _isRotatingAwayFromObsctacle = true;
+    private bool _isCircleOnright;
+
     public EnemyShipStateBackToCircle(GetState function) : base(function)
     {
     }
@@ -36,13 +38,21 @@ public class EnemyShipStateBackToCircle : EnemyState
         {
             if (_context.shipRaycasts.isHittingWall)
             {
-                _context.enemyTran.Rotate(_context.playerTran.forward, Vector2.SignedAngle(_context.enemyTran.up, Vector2.Lerp(_context.enemyTran.up, (_context.circlingMiddlePoint - _context.enemyPos).normalized, Time.deltaTime)));
+                if(_isCircleOnright)
+                {
+                    _context.enemyTran.Rotate(_context.playerTran.forward, -60f * Time.deltaTime);
+                }
+                else
+                {
+                    _context.enemyTran.Rotate(_context.playerTran.forward, 60f*Time.deltaTime);
+                }
+                
+                
             }
             else
             {
                 _isRotatingAwayFromObsctacle = false;
                 _isGoingBackToCircle = true;
-                // if (Physics2D.Raycast(_context.enemyPos, _lastVectorOnCircle.normalized * 1f))
             }
         }
         else
@@ -58,6 +68,7 @@ public class EnemyShipStateBackToCircle : EnemyState
                 if (_context.shipRaycasts.isHittingWall)
                 {
                     _isRotatingAwayFromObsctacle = true;
+                    if(IsCircleOnRight())
                     _isGoingBackToCircle = false;
                 }
             }
@@ -89,9 +100,14 @@ public class EnemyShipStateBackToCircle : EnemyState
         _isRotatingAwayFromObsctacle = true;
         _isGoingBackToCircle = false;
         float angle = Vector2.SignedAngle(_context.enemyTran.up, (_context.circlingMiddlePoint - _context.enemyPos).normalized);
+        _isCircleOnright = IsCircleOnRight();
         //_context.enemyTran.Rotate(Vector3.forward, angle);
     }
 
+    private bool IsCircleOnRight()
+    {
+         return (_context.enemyTran.InverseTransformPoint(_context.circlingMiddlePoint)).x>0;
+    }
     public override void InterruptState()
     {
      
