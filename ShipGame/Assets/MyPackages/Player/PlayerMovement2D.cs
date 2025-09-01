@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PlayerMovement2D : MonoBehaviour
 {
+    public float Speed => _moveSpeed;
     public int FlipSide => _flipSide;
     public bool IsPlayerFalling { get => _rb.linearVelocity.y < 0; }
     public Rigidbody2D PlayerRB => _rb;

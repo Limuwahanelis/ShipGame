@@ -1,3 +1,4 @@
+using MyBox;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ public abstract class EnemyController : MonoBehaviour
 {
     [Header("Debug"), SerializeField] bool _printState;
     [SerializeField] protected bool _debug;
+    [SerializeField, ConditionalField("_debug")] protected bool _activateOnStart;
     public GameObject MainBody => _mainBody;
     [SerializeField] protected EnemyStats _stats;
     [Header("Enemy common"), SerializeField] protected AnimationManager _enemyAnimationManager;
@@ -15,13 +17,14 @@ public abstract class EnemyController : MonoBehaviour
     [SerializeField] protected Rigidbody2D _playerRB;
     [SerializeField] protected GameObject _mainBody;
     [SerializeField] protected StandardHealthBar _healthBar;
+    [SerializeField] protected HealthSystem _healthSystem;
     [SerializeField] protected GunsComponent _guns;
     protected Dictionary<Type, EnemyState> _enemyStates = new Dictionary<Type, EnemyState>();
     protected EnemyState _currentEnemyState;
     public virtual void Awake()
     {
 
-        if (_playerTransform == null) _playerTransform = FindFirstObjectByType<PlayerController>().MainBody.transform;
+        ///if (_playerTransform == null) _playerTransform = FindFirstObjectByType<PlayerController>().MainBody.transform;
     }
     private void Start()
     {
@@ -34,12 +37,12 @@ public abstract class EnemyController : MonoBehaviour
     }
     public virtual void Update()
     {
-        if (PauseSettings.IsGamePaused) return;
+        //if (PauseSettings.IsGamePaused) return;
         _currentEnemyState.Update();
     }
     public virtual void FixedUpdate()
     {
-        if (PauseSettings.IsGamePaused) return;
+        //if (PauseSettings.IsGamePaused) return;
         _currentEnemyState.FixedUpdate();
     }
     public void ChangeState(EnemyState newState)

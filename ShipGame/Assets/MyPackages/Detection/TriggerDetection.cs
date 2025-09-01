@@ -11,12 +11,18 @@ public class TriggerDetection : MonoBehaviour
     [SerializeField] Collider2D _colliderToDetect;
     [SerializeField] bool _checkForSpecificCollider;
     [SerializeField] bool _disableDetectedGameObjectOnDetection;
+    [SerializeField] bool _workWhenGameObjectIsDeactivated;
 
     List<ITriggerDetectable> _detectables= new List<ITriggerDetectable>();
     private Rigidbody _rb;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!_workWhenGameObjectIsDeactivated)
+        {
+            if(!gameObject.activeSelf) return;
+
+        }
         if (_checkForSpecificCollider)
         {
             if (other == _colliderToDetect)
@@ -34,6 +40,11 @@ public class TriggerDetection : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (!_workWhenGameObjectIsDeactivated)
+        {
+            if (!gameObject.activeSelf) return;
+
+        }
         if (_checkForSpecificCollider)
         {
             if (other == _colliderToDetect)

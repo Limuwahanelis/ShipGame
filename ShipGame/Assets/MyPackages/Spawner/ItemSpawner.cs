@@ -10,6 +10,7 @@ public class  ItemSpawner: MonoBehaviour
 {
     public List<SpawnableItem> Spawneditems => _spawnedItems;
     [SerializeField,SearchContext("t:SpawnableItem")] SpawnableItem _itemPrefab;
+    [SerializeField] Transform _spawnedItemHolder;
     private ObjectPool<SpawnableItem> _pool;
     private List<SpawnableItem> _spawnedItems = new List<SpawnableItem>();
     // Start is called before the first frame update
@@ -24,7 +25,7 @@ public class  ItemSpawner: MonoBehaviour
     }
     SpawnableItem CreateItem()
     {
-        SpawnableItem item = Instantiate(_itemPrefab).GetComponent<SpawnableItem>();
+        SpawnableItem item = Instantiate(_itemPrefab,_spawnedItemHolder).GetComponent<SpawnableItem>();
         _spawnedItems.Add(item);
         item.SetPool(_pool);
         return item;

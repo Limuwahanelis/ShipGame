@@ -7,10 +7,10 @@ public class EnemyShipStateCircling : EnemyState
 {
     public static Type StateType { get => typeof(EnemyShipStateCircling); }
     private EnemyShipContext _context;
-    private Vector2 _previousPos;
     private Vector2 _targetPos;
     private float _angle;
     private float _angularSpeed;
+    private bool _gobackToCircle;
 
     public EnemyShipStateCircling(GetState function) : base(function)
     {
@@ -20,16 +20,18 @@ public class EnemyShipStateCircling : EnemyState
     {
         _context.gunsTimer += Time.deltaTime;
         _context.gunsTimer = Math.Clamp(_context.gunsTimer, 0, 60f);
-        if (_context.gunsTimer >= _context.stats.FireCooldown)
+        if (Vector2.Distance(_context.playeryPos, _context.enemyPos) <= _context.stats.CannonsRange)
         {
-            if (Vector2.Distance(_context.playerTran.position, _context.enemyPos) <= _context.stats.CannonsRange)
+            if (_context.gunsTimer >= _context.stats.FireCooldown)
             {
-                _context.guns.LookAt(_context.playerTran.position);
-                _context.gunsTimer = 0;
-                _context.guns.FireGuns();
+                if (Vector2.Distance(_context.playerTran.position, _context.enemyPos) <= _context.stats.CannonsRange)
+                {
+                    _context.guns.LookAt(_context.playerTran.position + _context.playerTran.up * _context.playerMovement2D.Speed);
+                    _context.gunsTimer = 0;
+                    _context.guns.FireGuns();
+                }
             }
         }
-
         if (Vector2.Distance(_context.circlingMiddlePoint, _context.playerTran.position) > _context.stats.StartCirclingDistance)
         {
             ChangeState(EnemyShipStateChase.StateType);
@@ -37,29 +39,27 @@ public class EnemyShipStateCircling : EnemyState
         else
         {
 
-            //if (Vector2.Distance(_context.enemyPos, _targetPos) > 0.02f)
-            //{
-            //    _context.enemyPos = Vector2.MoveTowards(_context.enemyPos, _targetPos, _context.stats.Speed * Time.deltaTime);
-            //    _context.enemyTran.up = _targetPos - _context.enemyPos;
-            //    return;
-            //}
-            //else
-            //{
-                if (_context.shipRaycasts.isHittingWall)
+            if (_context.shipRaycasts.isHittingWall)
+            {
+                ChangeState(EnemyShipStateBackToCircle.StateType);
+                return;
+            }
+            if (_gobackToCircle)
+            {
+                _context.enemyPos += Time.deltaTime * (Vector2)_context.enemyTran.up * _context.stats.Speed;
+                if (Vector2.Distance(_targetPos, _context.enemyPos) <= 0.05f)
                 {
-                    ChangeState(EnemyShipStateBackToCircle.StateType);
-                    return;
-
-
+                    _gobackToCircle = false;
                 }
-                //if(Physics2D.Raycast(_context.enemyPos,))
+            }
+            else
+            {
                 _angle += _angularSpeed * Time.deltaTime;
                 _targetPos = new Vector2(Mathf.Sin(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.x, Mathf.Cos(_angle) * _context.stats.StartCirclingDistance + _context.circlingMiddlePoint.y);
                 _context.enemyPos = _targetPos;
-                _previousPos = _context.enemyPos;
                 _context.enemyTran.up = Vector2.Perpendicular(_context.circlingMiddlePoint - _context.enemyPos);
                 if (_angle >= 2 * Mathf.PI) _angle = 0;
-            //}
+            }
         }
     }
 
@@ -73,7 +73,13 @@ public class EnemyShipStateCircling : EnemyState
         _context.agent.isStopped = true;
         _context.agent.updateRotation = false;
         _context.agent.enabled = false;
-        _previousPos = _context.enemyPos;
+        _gobackToCircle = false;
+        if (Vector2.Distance(_targetPos, _context.enemyPos) > 0.05f)
+        {
+            _gobackToCircle = true;
+            _context.enemyTran.up = (_targetPos - _context.enemyPos).normalized;
+        }
+
     }
 
     private float Convert(float angleInDeg)

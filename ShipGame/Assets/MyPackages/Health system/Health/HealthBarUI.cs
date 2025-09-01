@@ -49,4 +49,9 @@ public class HealthBarUI : HealthBar
     {
         _currentValue = math.clamp(_currentValue, 0, _maxValue);
     }
+
+    public override void AdjustForLength()
+    {
+        throw new System.NotImplementedException();
+    }
 }

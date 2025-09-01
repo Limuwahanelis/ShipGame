@@ -10,7 +10,10 @@ public class PlayerInteractions : MonoBehaviour
         _interactable = landing;
         //_amountSettable = landing;
     }
-
+    public void SetInteractable(IInteractable interactable)
+    {
+        _interactable = interactable;
+    }
     public void Interact()
     {
         if (_interactable == null) return;

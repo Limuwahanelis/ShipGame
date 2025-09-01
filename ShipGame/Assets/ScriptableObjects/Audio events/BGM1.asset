@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c6bfc4beebd9c4fbc8e869a527b37a, type: 3}
+  m_Name: BGM1
+  m_EditorClassIdentifier: 
+  _audioChannel: {fileID: 11400000, guid: b52a0ddbb0c39ec4c898405311570dfb, type: 2}
+  _masterAudioChannel: {fileID: 11400000, guid: c38dd6e25aac7714ab2f9a44e15cbd45, type: 2}
+  audioClip: {fileID: 8300000, guid: 75b16d2e680e1eb4eab7d322af2811d2, type: 3}

@@ -16,6 +16,7 @@ public class MultipleClipsRandomizedAudioEvent : AudioEvent
     {
         audioSource.clip = _audioclips[Random.Range(0, _audioclips.Length)];
         float volumef = Random.Range(_volume.minValue, _volume.maxValue);
+        audioSource.pitch = Random.Range(_pitch.minValue, _pitch.maxValue);
         audioSource.volume = volumef * (AudioVolumes.AudioChannels != null ? AudioVolumes.AudioChannels[_masterAudioChannel.ChannelNum].Value : _masterAudioChannel.Value) / 100.0f
             * (AudioVolumes.AudioChannels != null ? AudioVolumes.AudioChannels[_audioChannel.ChannelNum].Value : _audioChannel.Value) / 100.0f;
         if (audioSource.isPlaying)

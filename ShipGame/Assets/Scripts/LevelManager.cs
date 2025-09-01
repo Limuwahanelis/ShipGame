@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelManager : MonoBehaviour
 {
-    
+    public UnityEvent<int> OnNotorityLevelIncreased;
+    public UnityEvent<int> OnLootChanged;
     public int NotorityLevel 
     {
         get 
@@ -35,13 +37,18 @@ public class LevelManager : MonoBehaviour
         _notorityPoints = math.clamp(_notorityPoints, 0, 200);
         _onNotorityPointsChanged?.Raise(_notorityPoints);
         _onNotorityLevelChanged?.Raise(NotorityLevel);
+        if (_notorityPoints < 35) return ;
+        else if (_notorityPoints < 85) OnNotorityLevelIncreased?.Invoke(2);
+        else OnNotorityLevelIncreased?.Invoke(3);
+        
     }
-
     public void GoldPillaged(int amount)
     {
         _notorityPoints += (int)(amount / _pillagedGoldToNotority);
         _onNotorityPointsChanged?.Raise(_notorityPoints);
         _onNotorityLevelChanged?.Raise(NotorityLevel);
+        PlayerStats.loot +=(int) (amount + amount*(NotorityLevel-1)* 0.2);
+        OnLootChanged?.Invoke(amount);
     }
     private void OnDestroy()
     {

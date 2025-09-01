@@ -9,4 +9,5 @@ public abstract class HealthBar : MonoBehaviour
     public abstract void SetHealth(int hp);
     public abstract void SetMaxHealth(int value);
     public abstract void ReduceHP(int value);
+    public abstract void AdjustForLength();
 }

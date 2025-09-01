@@ -5,18 +5,28 @@ public class GunsComponent : MonoBehaviour
 {
     [SerializeField] List<ShipGun> _guns = new List<ShipGun>();
     [SerializeField] ItemSpawner _cannonBallSpawner;
-    public void SetUp(float gunsRange,float cannobBallSpeed,int damage)
+    [SerializeField] protected AudioEvent _gunFireAudioEvent;
+  
+    protected AudioEventPlayer _audioEventPlayer;
+    private void Start()
     {
+        _audioEventPlayer = FindFirstObjectByType<AudioEventPlayer>();
+    }
+    public void SetUp(float gunsRange,float cannobBallSpeed,int damage,ItemSpawner cannonBallpawner=null)
+    {
+        if (_cannonBallSpawner == null) _cannonBallSpawner = cannonBallpawner;
         foreach (ShipGun gun in _guns)
         {
             gun.SetUp(_cannonBallSpawner, gunsRange, cannobBallSpeed, damage);
         }
     }
-    public void FireGuns()
+    public virtual void FireGuns()
     {
+        _audioEventPlayer.PlayeAudioEvent(_gunFireAudioEvent);
         foreach (ShipGun gun in _guns)
         {
             gun.Fire();
+           
         }
 
     }

@@ -35,6 +35,17 @@ public class HealthSystem : MonoBehaviour,IDamagable
     public void SetMacHP(int value)
     {
         _maxHP = value;
+        _hpBar.SetMaxHealth(value);
+    }
+    public void SetHP(int value)
+    {
+
+        _currentHP = Math.Clamp( value,0,_maxHP);
+        _hpBar.SetHealth(_currentHP);
+    }
+    public void AdjustHealthbar()
+    {
+        _hpBar.AdjustForLength();
     }
     public virtual void TakeDamage(DamageInfo info)
     {

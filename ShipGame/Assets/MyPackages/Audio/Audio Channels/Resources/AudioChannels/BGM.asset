@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BGM
   m_EditorClassIdentifier: 
   _channelNum: 1
-  _value: 50
+  _value: 20

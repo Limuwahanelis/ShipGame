@@ -18,9 +18,13 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
     [SerializeField] IslandDescription _description;
     [SerializeField] List<Transform> _pillagePoints= new List<Transform>();
     [SerializeField] Transform _crewSpawnPoint;
-    
+    [SerializeField] Color _interactableColor;
+    [SerializeField] SpriteRenderer _renderer;
+    private Color _normalColor;
+
     private float _time = 0;
     private int _crewToPlunder;
+    private int _crewCurrentlyPlundering;
     private int _returnedCrewNum = 0;
     private int _currentLoot;
     private int _pillagedLoot;
@@ -33,7 +37,8 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
         if (_ship == null) _ship = FindFirstObjectByType<PlayerShip>();
         _ship.OnCrewToPillagedChanged += UpdateCrewToPillageAmount;
         _crewToPlunder = _minCrew;
-        _description.SetUp(_maxLoot, 0, _minCrew);
+        _description.SetUp(_maxLoot, _minCrew, 3);
+        _normalColor = _renderer.color;
     }
     public void SetUp(PlayerShip ship,ItemSpawner crewSpawner)
     {
@@ -49,7 +54,7 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
             _time += Time.deltaTime;
             if(_time>=1f)
             {
-                int pillagedAmount = _crewToPlunder * PlayerStats.lootperSecond;
+                int pillagedAmount = _crewCurrentlyPlundering * PlayerStats.lootperSecond;
                 _currentLoot -= pillagedAmount;
                 if(_currentLoot<0)
                 {
@@ -68,11 +73,13 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
     {
         PlayerInteractions playerInteractions = col.attachedRigidbody.GetComponent<PlayerInteractions>();
         playerInteractions.SetIslandLanding(this);
+        _renderer.color = _interactableColor;
     }
     public void RemovePlayerInteractions(Collider2D col)
     {
         PlayerInteractions playerInteractions = col.attachedRigidbody.GetComponent<PlayerInteractions>();
         playerInteractions.SetIslandLanding(null);
+        _renderer.color = _normalColor;
     }
     public void UpdateCrewToPillageAmount(int value)
     {
@@ -98,7 +105,7 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
         {
             _unloadCrewEvent?.Raise();
             _isBeingPillaged = false;
-            for (int i = 0; i < _crewToPlunder; i++)
+            for (int i = 0; i < _crewCurrentlyPlundering; i++)
             {
                 _crewMembers[i].GetComponent<CrewMember>().Return();
             }
@@ -108,6 +115,8 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
         else
         {
             if (_crewToPlunder < _minCrew) return;
+            _crewCurrentlyPlundering = _crewToPlunder;
+            _ship.Pillage(_crewCurrentlyPlundering);
             _isBeingPillaged = true;
             _unloadCrewEvent?.Raise();
             StartCoroutine(UnloadCor());
@@ -117,10 +126,10 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
     private void OnCrewReturned()
     {
         _returnedCrewNum++;
-        if(_returnedCrewNum==_crewToPlunder)
+        if(_returnedCrewNum== _crewCurrentlyPlundering)
         {
             _unloadCrewEvent?.Raise();
-            for (int i = 0; i < _crewToPlunder; i++)
+            for (int i = 0; i < _crewCurrentlyPlundering; i++)
             {
                 _crewMembers[i].ReturnToPool();
                 _crewMembers[i].GetComponent<CrewMember>().OnCrewReturned-=OnCrewReturned;
@@ -128,6 +137,9 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
             _crewMembers.Clear();
             _returnedCrewNum = 0;
             OnPillaged?.Invoke(_pillagedLoot);
+            _pillagedLoot = 0;
+            _ship.CrewReturns(_crewCurrentlyPlundering);
+            _crewCurrentlyPlundering = 0;
             Logger.Log("Crew returned");
         }
     }
@@ -135,7 +147,7 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
     private IEnumerator UnloadCor()
     {
 
-        for (int i = 0; i < _crewToPlunder; i++)
+        for (int i = 0; i < _crewCurrentlyPlundering; i++)
         {
             yield return new WaitForSeconds(_unloadSpeed);
             SpawnableItem crewMember = _crewSpawner.GetItem();
@@ -143,13 +155,12 @@ public class IslandLanding : MonoBehaviour/*,IAmountSettable*/,IInteractable
             crewMember.GetComponent<CrewMember>().OnCrewReturned += OnCrewReturned;
             crewMember.GetComponent<CrewMember>().SetSpawnPos(_crewSpawnPoint.position);
         }
-        for (int i = 0, pillageIndex = 0; i < _crewToPlunder; i++)
+        for (int i = 0, pillageIndex = 0; i < _crewCurrentlyPlundering; i++)
         {
             _crewMembers[i].GetComponent<CrewMember>().SetPosToPlunder(_pillagePoints[pillageIndex].position);
             pillageIndex++;
-            if (pillageIndex > _crewToPlunder) pillageIndex = 0;
+            if (pillageIndex > _pillagePoints.Count-1) pillageIndex = 0;
         }
-
 
         _unloadCrewEvent?.Raise();
 

@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: e67c9b25896dcb54ea1bb88796cbca0b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _cannonBallSpawner: {instanceID: 0}
+  - _gunFireAudioEvent: {fileID: 11400000, guid: 1b7a77bd3746e02489661e6546b16e7b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

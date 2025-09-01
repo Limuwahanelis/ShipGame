@@ -13,4 +13,5 @@ public class EnemyShipContext : EnemyContext
     public float gunsTimer;
     public NavMeshAgent agent;
     public ShipRaycasts shipRaycasts;
+    public PlayerMovement2D playerMovement2D;
 }

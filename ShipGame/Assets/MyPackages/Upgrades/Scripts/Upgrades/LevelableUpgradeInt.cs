@@ -8,7 +8,7 @@ public class LevelableUpgradeInt : LevelableUpgrade,ISerializationCallbackReceiv
     private LevelableUpgradeIntSO _upgradeDump;
     public void BuyUpgrade()
     {
-        TryBuyUpgrade(_upgrade);
+        BuyUpgrade(_upgrade);
     }
 
     public void DecreaseLevelToBuy()
@@ -37,9 +37,12 @@ public class LevelableUpgradeInt : LevelableUpgrade,ISerializationCallbackReceiv
 
     public void OnAfterDeserialize()
     {
-        if (_upgradeDump != default)
+        if (_upgrade == null)
         {
-            _upgrade = _upgradeDump;
+            if (_upgradeDump != default)
+            {
+                _upgrade = _upgradeDump;
+            }
         }
         
     }
@@ -47,13 +50,14 @@ public class LevelableUpgradeInt : LevelableUpgrade,ISerializationCallbackReceiv
     public void OnBeforeSerialize()
     {
         _upgradeDump = _upgrade;
+
     }
     public override void GetCurrentUpgradeLevel()
     {
         _upgradeCurrentLevel = UpgradesManager.GetUpgradeLevel(_upgrade.Id);
         _upgradelevelToBuy = _upgradeCurrentLevel + 1;
         if (_upgradeCurrentLevel == _upgrade.MaxLevel) _upgradelevelToBuy = _upgradeCurrentLevel;
-        toPay += _upgrade.CostPerLevel * _upgradelevelToBuy;
+        toPay += (int)_upgrade.CostPerLevel * _upgradelevelToBuy;
         _upgradeLevellUI.SetPreviewLevel(_upgradelevelToBuy);
         _upgradeLevellUI.SetUpgradeBuyLevel(_upgradelevelToBuy - 1);
         _upgradeLevellUI.SetPrice(toPay);

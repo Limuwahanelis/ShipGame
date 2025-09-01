@@ -9,7 +9,7 @@ public class LevelableUpgradeFloat : LevelableUpgrade,ISerializationCallbackRece
   
     public void BuyUpgrade()
     {
-        TryBuyUpgrade(_upgrade);
+        BuyUpgrade(_upgrade);
     }
 
     public void DecreaseLevelToBuy()
@@ -54,7 +54,7 @@ public class LevelableUpgradeFloat : LevelableUpgrade,ISerializationCallbackRece
         _upgradeCurrentLevel = UpgradesManager.GetUpgradeLevel(_upgrade.Id);
         _upgradelevelToBuy = _upgradeCurrentLevel + 1;
         if (_upgradeCurrentLevel == _upgrade.MaxLevel) _upgradelevelToBuy = _upgradeCurrentLevel;
-        toPay += _upgrade.CostPerLevel * _upgradelevelToBuy;
+        toPay += (int)_upgrade.CostPerLevel * _upgradelevelToBuy;
         _upgradeLevellUI.SetPreviewLevel(_upgradelevelToBuy);
         _upgradeLevellUI.SetUpgradeBuyLevel(_upgradelevelToBuy - 1);
         _upgradeLevellUI.SetPrice(toPay);

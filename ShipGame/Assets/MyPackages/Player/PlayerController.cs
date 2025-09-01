@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerMovement2D _playerMovement;
     [SerializeField] AudioEventPlayer _playerAudioEventPlayer;
     [SerializeField] PlayerShip _ship;
+    [SerializeField] LevelableUpgradeIntSO _healthUpgrade;
+    [SerializeField] GameOver _gameOver;
     //[SerializeField] PlayerChecks _playerChecks;
     //[SerializeField] PlayerCombat _playerCombat;
     //[SerializeField] PlayerCollisions _playerCollisions;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private PlayerContext _context;
     private Dictionary<Type, PlayerState> playerStates = new Dictionary<Type, PlayerState>();
     private bool _isAlive = true;
+    private int _startingHP;
     [SerializeField,HideInInspector] private string _initialStateType;
     void Start()
     {
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour
     }
     protected void Initalize()
     {
+        _startingHP = _playerHealthSystem.MaxHP;
         _playerHealthSystem.OnDeath += OOnDeath;
 
         List<Type> states = AppDomain.CurrentDomain.GetAssemblies().SelectMany(domainAssembly => domainAssembly.GetTypes())
@@ -67,7 +71,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OOnDeath(IDamagable damagable)
     {
-
+        _gameOver.ShowGameOver();
     }
     public PlayerState GetState(Type state)
     {
@@ -106,7 +110,14 @@ public class PlayerController : MonoBehaviour
         _interactions.Interact();
         _playerMovement.Stop();
     }
-
+    public void RaiseMaxHp(LevelableUpgradeSO upgrade, int increaseValue)
+    {
+        if (upgrade != _healthUpgrade) return;
+        int maxHp = _startingHP + _healthUpgrade.PerLevelIncrease;
+        _playerHealthSystem.SetMacHP(maxHp);
+        _playerHealthSystem.SetHP(maxHp);
+        _playerHealthSystem.AdjustHealthbar();
+    }
     public Coroutine WaitAndExecuteFunction(float timeToWait, Action function)
     {
         return StartCoroutine(HelperClass.DelayedFunction(timeToWait, function));

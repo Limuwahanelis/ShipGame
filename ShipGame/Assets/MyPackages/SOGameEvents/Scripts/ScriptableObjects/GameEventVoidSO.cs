@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="new game event",menuName ="Game event")]
+[CreateAssetMenu(fileName ="new game event",menuName = "Game event/Game event")]
 public class GameEventVoidSO : GameEventSO
 {
     private List<GameEventListener> _listeners = new List<GameEventListener>();

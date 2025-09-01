@@ -16,13 +16,16 @@ public class EnemyShipStateChase : EnemyState
     {
         _context.gunsTimer += Time.deltaTime;
         _context.gunsTimer = Math.Clamp(_context.gunsTimer, 0, 60f);
-        if (_context.gunsTimer >= _context.stats.FireCooldown)
+        if (Vector2.Distance(_context.playeryPos, _context.enemyPos) <= _context.stats.CannonsRange)
         {
-            if (Vector2.Distance(_context.playerTran.position, _context.enemyPos) <= _context.stats.CannonsRange)
+            if (_context.gunsTimer >= _context.stats.FireCooldown)
             {
-                _context.guns.LookAt(_context.playerTran.position);
-                _context.gunsTimer = 0;
-                _context.guns.FireGuns();
+                if (Vector2.Distance(_context.playerTran.position, _context.enemyPos) <= _context.stats.CannonsRange)
+                {
+                    _context.guns.LookAt(_context.playerTran.position + _context.playerTran.up * _context.playerMovement2D.Speed);
+                    _context.gunsTimer = 0;
+                    _context.guns.FireGuns();
+                }
             }
         }
         if(Vector2.Distance(_context.enemyTran.position,_context.playerTran.position)<_context.stats.StartCirclingDistance)
@@ -44,8 +47,8 @@ public class EnemyShipStateChase : EnemyState
         base.SetUpState(context);
         _context = (EnemyShipContext)context;
         //_context.agent.SetDestination(_context.playerTran.position);
-        _context.agent.isStopped = true;
         _context.agent.enabled = true;
+        _context.agent.isStopped = true;
         _context.agent.updateRotation = true;
     }
 

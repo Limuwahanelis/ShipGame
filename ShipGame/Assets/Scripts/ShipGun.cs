@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ShipGun : MonoBehaviour
 {
@@ -6,12 +7,18 @@ public class ShipGun : MonoBehaviour
     public Transform CannonBallSpawnPoint { get => _cannonBallSpawnPoint;  }
 
     [SerializeField] SpriteRenderer _rangeLine;
+    [SerializeField] Color _rangeLineOffColor;
     [SerializeField] Transform _cannonBallSpawnPoint;
     [SerializeField] CollisionIgnorer _collisionIgnorer;
     ItemSpawner _cannonBallSpawner;
     private float _cannonBallMaxDistance;
     private float _cannonBallSpeed;
     private int _cannonBallDamge;
+    private Color _normalRangeIndicatorColor;
+    private void Awake()
+    {
+        _normalRangeIndicatorColor = _rangeLine.color;
+    }
     public void SetUp(ItemSpawner cannonBallSpawner, float travelRange, float cannonBallSpeed , int damage)
     {
         _rangeLine.transform.localPosition = new Vector3(0, travelRange / 2, 0);
@@ -29,5 +36,9 @@ public class ShipGun : MonoBehaviour
         cannonBall.SetUp(_cannonBallMaxDistance, _cannonBallDamge,_cannonBallSpeed, transform.up,_collisionIgnorer);
         cannonBall.transform.position = _cannonBallSpawnPoint.position;
     }
-
+    public void SetRangeIndicator(bool value)
+    {
+        if (value) _rangeLine.color = _normalRangeIndicatorColor;
+        else _rangeLine.color = _rangeLineOffColor;
+    }
 }

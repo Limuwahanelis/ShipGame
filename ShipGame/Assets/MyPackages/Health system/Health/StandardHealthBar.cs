@@ -22,7 +22,7 @@ public class StandardHealthBar : HealthBar
     {
         Initialize();
     }
-    public void AdjustForLength()
+    public override void AdjustForLength()
     {
         transform.localScale = new Vector3(_maxHP * _lengthPerHP, transform.lossyScale.y, transform.lossyScale.z);
     }

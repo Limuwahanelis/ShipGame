@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rangeLine: {fileID: 4739451908821451531}
+  _rangeLineOffColor: {r: 0.6037736, g: 0, b: 0, a: 0.7372549}
   _cannonBallSpawnPoint: {fileID: 7810735721981311794}
   _collisionIgnorer: {fileID: 0}
 --- !u!1 &8177808362855887766
